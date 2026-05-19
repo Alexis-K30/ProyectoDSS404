@@ -1,4 +1,4 @@
-# Proyecto DSS 404 - Tienda de Bicicletas
+# Proyecto DSS 404 - Tienda
 
 Este es un proyecto construido con [Laravel](https://laravel.com/) que gestiona el inventario, los usuarios y los pedidos de una tienda de bicicletas. 
 
