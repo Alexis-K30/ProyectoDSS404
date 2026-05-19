@@ -2,50 +2,80 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
-    protected $table = 'Usuario';
-    protected $primaryKey = 'ID_cliente';
+    use HasFactory;
+
+    protected $table = 'usuarios';
 
     protected $fillable = [
-        'Nombre',
-        'Telefono',
-        'TipoUsuario',
-        'FechaCrea',
-        'ID_administrador',
+        'nombre', 'apellido', 'email', 'password',
+        'telefono', 'calle', 'ciudad', 'estado_dir', 'codigo_postal',
+        'rol', 'estado',
     ];
 
-    /**
-     * Relación de jerarquía: Un usuario puede tener un administrador/supervisor.
-     */
-    public function supervisor()
+    protected $hidden = ['password'];
+
+    protected $casts = [
+        'email_verificado_en' => 'datetime',
+        'rol'    => 'integer',
+        'estado' => 'integer',
+    ];
+
+    // --- Accessors ---
+    protected function nombreCompleto(): Attribute
     {
-        return $this->belongsTo(Usuario::class, 'ID_administrador', 'ID_cliente');
+        return Attribute::make(
+            get: fn () => "{$this->nombre} {$this->apellido}"
+        );
     }
 
-    /**
-     * Relación de jerarquía: Un administrador puede supervisar a varios usuarios.
-     */
-    public function subordinados()
+    protected function direccionFormateada(): Attribute
     {
-        return $this->hasMany(Usuario::class, 'ID_administrador', 'ID_cliente');
+        return Attribute::make(
+            get: fn () => implode(', ', array_filter([
+                $this->calle, $this->ciudad,
+                $this->estado_dir, $this->codigo_postal,
+            ]))
+        );
     }
 
-    /**
-     * Cotizaciones generadas por este usuario como empleado.
-     */
-    public function cotizacionesComoEmpleado()
+    protected function esAdmin(): Attribute
     {
-        return $this->hasMany(Cotizacion::class, 'ID_Empleado', 'ID_cliente');
+        return Attribute::make(get: fn () => $this->rol === 3);
     }
 
-    /**
-     * Cotizaciones solicitadas por este usuario como cliente.
-     */
-    public function cotizacionesComoCliente()
+    // --- Scopes ---
+    public function scopeActivos(Builder $q): Builder
     {
-        return $this->hasMany(Cotizacion::class, 'IDCliente', 'ID_cliente');
+        return $q->where('estado', 1);
+    }
+
+    public function scopeClientes(Builder $q): Builder
+    {
+        return $q->where('rol', 1);
+    }
+
+    public function scopeAdmins(Builder $q): Builder
+    {
+        return $q->where('rol', 3);
+    }
+
+    // --- Control de cuenta ---
+    public function isAccountNonExpired(): bool     { return $this->estado !== 2; }
+    public function isAccountNonLocked(): bool      { return $this->estado !== 0; }
+    public function isCredentialsNonExpired(): bool { return true; }
+    public function isEnabled(): bool               { return $this->estado === 1; }
+
+    // --- Relaciones ---
+    public function pedidos(): HasMany
+    {
+        return $this->hasMany(Pedido::class, 'usuario_id');
     }
 }

@@ -19,9 +19,9 @@ return new class extends Migration
             $table->unsignedBigInteger('IDCliente');
             $table->unsignedBigInteger('ID_Producto');
             
-            $table->foreign('ID_Empleado')->references('ID_cliente')->on('Usuario');
-            $table->foreign('IDCliente')->references('ID_cliente')->on('Usuario');
-            $table->foreign('ID_Producto')->references('ID_producto')->on('Producto');
+            $table->foreign('ID_Empleado')->references('id')->on('usuarios');
+            $table->foreign('IDCliente')->references('id')->on('usuarios');
+            $table->foreign('ID_Producto')->references('id')->on('productos');
             
             $table->timestamps();
         });
