@@ -12,15 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('items_pedido', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('pedido_id')->constrained('pedidos')->cascadeOnDelete();
             $table->integer('item_id');
             $table->foreignId('producto_id')->constrained('productos')->restrictOnDelete();
             $table->integer('cantidad')->default(1);
             $table->decimal('precio_lista', 10, 2)->default(0);
             $table->decimal('descuento', 4, 2)->default(0);
-            $table->primary(['pedido_id', 'item_id']);
 
             $table->index('producto_id');
+            $table->unique(['pedido_id', 'item_id']);
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('items__pedidos');
+        Schema::dropIfExists('items_pedido');
     }
 };

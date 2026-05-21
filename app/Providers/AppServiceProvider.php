@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Usuario;
 use App\Models\Pedido;
+use App\Policies\PedidoPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
@@ -21,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
 {
     Schema::defaultStringLength(191);
+
+    Gate::policy(Pedido::class, PedidoPolicy::class);
 
     // Gates
     Gate::before(function (Usuario $usuario, string $ability) {

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Productos extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'productos';
 
@@ -20,6 +21,13 @@ class Productos extends Model
         'categoria_id',
         'modelo_anio',
         'precio_lista',
+    ];
+
+    protected $casts = [
+        'marca_id' => 'integer',
+        'categoria_id' => 'integer',
+        'modelo_anio' => 'integer',
+        'precio_lista' => 'decimal:2',
     ];
 
     public function categoria(): BelongsTo

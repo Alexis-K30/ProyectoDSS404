@@ -25,9 +25,9 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Categorías
+        // Categorias
         Categoria::insert([
-            ['nombre_categoria' => 'Bicicletas de Montaña', 'created_at' => now(), 'updated_at' => now()],
+            ['nombre_categoria' => 'Bicicletas de Montana', 'created_at' => now(), 'updated_at' => now()],
             ['nombre_categoria' => 'Bicicletas de Ruta',    'created_at' => now(), 'updated_at' => now()],
             ['nombre_categoria' => 'Accesorios',            'created_at' => now(), 'updated_at' => now()],
             ['nombre_categoria' => 'Componentes',           'created_at' => now(), 'updated_at' => now()],

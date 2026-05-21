@@ -1,98 +1,146 @@
 # Proyecto DSS 404 - Tienda
 
-Este es un proyecto construido con [Laravel](https://laravel.com/) que gestiona el inventario, los usuarios y los pedidos de una tienda de bicicletas. 
+API en Laravel para gestionar usuarios, categorias, productos, pedidos e items de pedido de una tienda.
 
-A continuación, encontrarás los pasos necesarios para instalar, configurar y levantar el proyecto en tu máquina local.
+## Requisitos
 
-## 📋 Requisitos Previos
+- PHP 8.3 o superior
+- Composer
+- Node.js y npm
+- Git
+- MySQL/MariaDB opcional si no quieres usar SQLite
 
-Asegúrate de tener instalados los siguientes programas en tu entorno de desarrollo:
+## Instalacion
 
-- **PHP** (versión 8.2 o superior recomendada)
-- **Composer** (gestor de dependencias de PHP)
-- **MySQL / MariaDB** (puedes usar XAMPP, Laragon, o Docker)
-- **Git**
+Desde PowerShell, entra a la carpeta del proyecto:
 
----
-
-## 🚀 Guía de Instalación
-
-Sigue estos pasos en orden para levantar el proyecto:
-
-### 1. Clonar el repositorio
-Abre tu terminal y clona el proyecto en tu carpeta de desarrollo local:
-```bash
-git clone <url-del-repositorio>
-cd ProyectoDSS404
+```powershell
+cd C:\Users\USER\Music\ProyectoDSS404-Alexis
 ```
 
-### 2. Instalar las dependencias de PHP
-Descarga e instala todos los paquetes necesarios del framework:
-```bash
+Instala las dependencias:
+
+```powershell
 composer install
+npm install
 ```
 
-### 3. Configurar el archivo de entorno (.env)
-Haz una copia del archivo de ejemplo `.env.example` y renómbralo a `.env`:
-```bash
-cp .env.example .env
-```
-*(En Windows puedes simplemente copiar el archivo y renombrarlo manualmente).*
+Si no existe el archivo `.env`, crealo desde el ejemplo:
 
-### 4. Generar la Key de la Aplicación
-Genera la llave de encriptación de Laravel, la cual se guardará automáticamente en tu archivo `.env`:
-```bash
+```powershell
+Copy-Item .env.example .env
+```
+
+Genera la key de Laravel:
+
+```powershell
 php artisan key:generate
 ```
 
----
+## Base De Datos
 
-## 🗄️ Configuración de la Base de Datos (MySQL)
+### Opcion rapida con SQLite
 
-Este proyecto está configurado para utilizar el motor InnoDB de MySQL por defecto, garantizando que todas las relaciones (llaves foráneas) funcionen correctamente.
+En `.env`, usa:
 
-### 1. Crear la base de datos
-Abre tu gestor de base de datos favorito (phpMyAdmin, DBeaver, o consola MySQL) y **crea una base de datos vacía** llamada `laravel` (o el nombre que prefieras).
+```env
+DB_CONNECTION=sqlite
+```
 
-### 2. Conectar el proyecto a la base de datos
-Abre el archivo `.env` que creaste en el paso anterior y asegúrate de que las credenciales de la base de datos coincidan con las de tu entorno local:
+Verifica que exista el archivo:
+
+```powershell
+New-Item -ItemType File -Force database\database.sqlite
+```
+
+Crea las tablas y datos de prueba:
+
+```powershell
+php artisan migrate:fresh --seed
+```
+
+Tambien se incluye un SQL de referencia en `database/dss404_seed.sql` con las tablas principales y datos generados por los seeders. Para ejecutar el proyecto se recomienda usar las migraciones y seeders, porque mantienen la base sincronizada con el codigo.
+
+### Opcion con MySQL
+
+Crea una base de datos vacia, por ejemplo `laravel`, y configura `.env`:
 
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=laravel    # Reemplaza por el nombre de tu bd si usaste otro
-DB_USERNAME=root       # Usuario de tu base de datos (por defecto 'root' en XAMPP)
-DB_PASSWORD=           # Contraseña (suele ir vacía en XAMPP local)
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
 ```
 
-### 3. Ejecutar las Migraciones y Seeders
-Con la base de datos configurada, crea las tablas y llénalas con los datos de prueba (categorías, 50 productos, usuarios y pedidos). Ejecuta en la terminal:
+Luego ejecuta:
 
-```bash
+```powershell
 php artisan migrate:fresh --seed
 ```
-*Nota: El parámetro `fresh` borra todas las tablas previas si existen, y las vuelve a crear desde cero. El `--seed` inserta los datos de prueba automatizados.*
 
----
+## Ejecutar El Proyecto
 
-## 🏃‍♂️ Ejecutar el Proyecto
+Levanta el servidor local:
 
-Una vez que todo está instalado y la base de datos está poblada, puedes levantar el servidor de desarrollo integrado de Laravel:
-
-```bash
+```powershell
 php artisan serve
 ```
 
-La aplicación estará disponible en tu navegador ingresando a:
-👉 **[http://localhost:8000](http://localhost:8000)**
+La app quedara disponible en:
 
----
+```text
+http://127.0.0.1:8000
+```
 
-## 🛠️ Comandos Útiles
+## Probar La API
 
-Si en algún momento necesitas resetear la base de datos o arreglar problemas de caché, puedes usar:
+Ver rutas disponibles:
 
-- **Limpiar caché general**: `php artisan optimize:clear`
-- **Reconstruir autoloader**: `composer dump-autoload`
-- **Resetear base de datos**: `php artisan migrate:fresh --seed`
+```powershell
+php artisan route:list --path=api/v1
+```
+
+Login de prueba:
+
+```text
+POST http://127.0.0.1:8000/api/v1/auth/login
+```
+
+Body JSON:
+
+```json
+{
+  "email": "admin@tienda.com",
+  "password": "admin1234"
+}
+```
+
+Usa el token recibido como Bearer Token para probar rutas protegidas.
+
+## Tests
+
+```powershell
+php artisan test
+```
+
+## Comandos Utiles
+
+Limpiar cache:
+
+```powershell
+php artisan optimize:clear
+```
+
+Reconstruir autoload:
+
+```powershell
+composer dump-autoload -a
+```
+
+Resetear base de datos:
+
+```powershell
+php artisan migrate:fresh --seed
+```
