@@ -8,6 +8,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -46,6 +47,13 @@ return Application::configure(basePath: dirname(__DIR__))
                     'success' => false,
                     'message' => 'No tienes permisos para realizar esta accion.',
                 ], 403);
+            }
+
+            if ($e instanceof NotFoundHttpException) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La ruta solicitada no existe. Revisa el prefijo /v1/.',
+                ], 404);
             }
 
             if ($e instanceof ModelNotFoundException) {
