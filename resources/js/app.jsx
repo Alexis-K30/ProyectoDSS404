@@ -3,8 +3,20 @@ import { createRoot } from 'react-dom/client'
 import axios from 'axios'
 import '../css/app.css'
 
-const API_BASE = '/api/v1'
 const TOKEN_KEY = 'dss404_api_token'
+const hasMeta = (typeof import.meta !== 'undefined' && import.meta.env)
+let envApi = hasMeta && import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : '/api/v1'
+// In development use a relative path so Vite dev server can proxy requests to the backend
+if (hasMeta && import.meta.env.MODE === 'development') {
+  try {
+    if (envApi && /^https?:\/\//.test(envApi)) {
+      envApi = new URL(envApi).pathname || '/api/v1'
+    }
+  } catch (e) {
+    envApi = '/api/v1'
+  }
+}
+const API_BASE = envApi.replace(/\/+$|\s+$/g, '')
 
 const api = axios.create({ baseURL: API_BASE })
 
@@ -142,6 +154,11 @@ function AuthBox({ onLogin, onRegister, onLogout, view, setView }) {
   const [regEmail, setRegEmail] = useState('')
   const [regPassword, setRegPassword] = useState('')
   const [regPasswordConfirm, setRegPasswordConfirm] = useState('')
+  const [telefono, setTelefono] = useState('')
+  const [calle, setCalle] = useState('')
+  const [ciudad, setCiudad] = useState('')
+  const [estadoDir, setEstadoDir] = useState('')
+  const [codigoPostal, setCodigoPostal] = useState('')
 
   return (
     <div>
@@ -160,13 +177,23 @@ function AuthBox({ onLogin, onRegister, onLogout, view, setView }) {
       )}
 
       {view === 'register' && (
-        <form onSubmit={e=>{e.preventDefault(); onRegister({ nombre, apellido, email:regEmail, password:regPassword, password_confirmation: regPasswordConfirm })}} className="form-grid">
+        <form onSubmit={e=>{e.preventDefault(); onRegister({ nombre, apellido, email:regEmail, password:regPassword, password_confirmation: regPasswordConfirm, telefono, calle, ciudad, estado_dir: estadoDir, codigo_postal: codigoPostal })}} className="form-grid">
           <label>Nombre</label>
           <input className="input" value={nombre} onChange={e=>setNombre(e.target.value)} />
           <label>Apellido</label>
           <input className="input" value={apellido} onChange={e=>setApellido(e.target.value)} />
           <label>Email</label>
           <input className="input" value={regEmail} onChange={e=>setRegEmail(e.target.value)} />
+          <label>Teléfono</label>
+          <input className="input" value={telefono} onChange={e=>setTelefono(e.target.value)} />
+          <label>Calle</label>
+          <input className="input" value={calle} onChange={e=>setCalle(e.target.value)} />
+          <label>Ciudad</label>
+          <input className="input" value={ciudad} onChange={e=>setCiudad(e.target.value)} />
+          <label>Estado / Provincia</label>
+          <input className="input" value={estadoDir} onChange={e=>setEstadoDir(e.target.value)} />
+          <label>Código Postal</label>
+          <input className="input" value={codigoPostal} onChange={e=>setCodigoPostal(e.target.value)} />
           <label>Password</label>
           <input className="input" type="password" value={regPassword} onChange={e=>setRegPassword(e.target.value)} />
           <label>Confirmar Password</label>

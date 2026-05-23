@@ -119,6 +119,20 @@ Body JSON:
 
 Usa el token recibido como Bearer Token para probar rutas protegidas.
 
+Nota: si no podés entrar con las credenciales de arriba, asegurate de ejecutar los seeders para crear al administrador:
+
+```powershell
+php artisan migrate:fresh --seed
+# o al menos
+php artisan db:seed --class=DatabaseSeeder
+```
+
+También podés restablecer la contraseña del admin manualmente desde Tinker:
+
+```powershell
+php artisan tinker --execute "\App\Models\Usuario::where('email','admin@tienda.com')->update(['password'=>\Illuminate\Support\Facades\Hash::make('admin1234')]);"
+```
+
 ## Tests
 
 ```powershell
