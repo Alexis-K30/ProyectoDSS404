@@ -18,10 +18,12 @@ class ProductoRequest extends FormRequest
 
         return [
             'nombre_producto' => [$required, 'string', 'max:255'],
-            'marca_id' => ['nullable', 'integer', 'min:1'],
-            'categoria_id' => ['nullable', Rule::exists('categorias', 'id')],
-            'modelo_anio' => ['nullable', 'integer', 'between:1900,' . (now()->year + 1)],
-            'precio_lista' => [$required, 'numeric', 'min:0', 'max:99999999.99'],
+            'marca_id'        => ['nullable', 'integer', 'min:1'],
+            'categoria_id'    => ['nullable', Rule::exists('categorias', 'id')],
+            'modelo_anio'     => ['nullable', 'integer', 'between:1900,' . (now()->year + 1)],
+            'precio_lista'    => [$required, 'numeric', 'min:0', 'max:99999999.99'],
+            'imagenes'        => ['nullable', 'array', 'max:5'],
+            'imagenes.*'      => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

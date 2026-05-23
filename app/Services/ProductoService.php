@@ -21,4 +21,15 @@ class ProductoService
             ->orderBy('nombre_producto')
             ->paginate($filters['per_page'] ?? 15);
     }
+
+    public function create(array $data): Productos
+    {
+        return Productos::create($data)->load('categoria');
+    }
+
+    public function update(Productos $producto, array $data): Productos
+    {
+        $producto->update($data);
+        return $producto->refresh()->load('categoria');
+    }
 }

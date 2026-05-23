@@ -21,13 +21,15 @@ class Productos extends Model
         'categoria_id',
         'modelo_anio',
         'precio_lista',
+        'imagenes',
     ];
 
     protected $casts = [
-        'marca_id' => 'integer',
+        'marca_id'     => 'integer',
         'categoria_id' => 'integer',
-        'modelo_anio' => 'integer',
+        'modelo_anio'  => 'integer',
         'precio_lista' => 'decimal:2',
+        'imagenes'     => 'array',
     ];
 
     public function categoria(): BelongsTo
