@@ -22,6 +22,7 @@ class Productos extends Model
         'modelo_anio',
         'precio_lista',
         'imagenes',
+        'stock',
     ];
 
     protected $casts = [
@@ -30,6 +31,7 @@ class Productos extends Model
         'modelo_anio'  => 'integer',
         'precio_lista' => 'decimal:2',
         'imagenes'     => 'array',
+        'stock'        => 'integer',
     ];
 
     public function categoria(): BelongsTo
