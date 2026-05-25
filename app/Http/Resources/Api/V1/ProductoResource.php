@@ -18,9 +18,11 @@ class ProductoResource extends JsonResource
             'imagenes' => $this->imagenes ?? [],
             'modelo_anio' => $this->modelo_anio,
             'precio_lista' => $this->precio_lista,
+            'stock' => $this->stock ?? 0,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
+            
         ];
     }
 }
