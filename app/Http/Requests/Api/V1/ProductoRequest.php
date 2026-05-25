@@ -24,6 +24,7 @@ class ProductoRequest extends FormRequest
             'precio_lista'    => [$required, 'numeric', 'min:0', 'max:99999999.99'],
             'imagenes'        => ['nullable', 'array', 'max:5'],
             'imagenes.*'      => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'stock'           => ['nullable', 'integer', 'min:0'], 
         ];
     }
 }
