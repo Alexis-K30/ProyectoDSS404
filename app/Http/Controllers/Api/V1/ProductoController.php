@@ -44,6 +44,8 @@ class ProductoController extends Controller
  
         $data = $request->validated();
         $data['imagenes'] = $this->subirImagenes($request);
+        $data['stock'] = $request->input('stock', 0);
+
  
         return $this->success(
             new ProductoResource(Productos::create($data)->load('categoria')),
@@ -71,7 +73,12 @@ class ProductoController extends Controller
             $this->eliminarImagenes($producto->imagenes ?? []);
             $data['imagenes'] = $this->subirImagenes($request);
         }
- 
+
+        // Actualizar stock si viene en la petición
+        if ($request->has('stock')) {
+            $data['stock'] = $request->input('stock');
+        }
+    
         $producto->update($data);
  
         return $this->success(
